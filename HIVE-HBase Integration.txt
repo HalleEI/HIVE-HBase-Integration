@@ -1,0 +1,59 @@
+*******To make a copy of my internal tables, to another database called dslhbase********
+create databases dslbase;
+create table dslhbase.hbcsvbookings AS select * from DSL.Dcsvbookings;
+create table dslhbase.hbcsvfacilities AS select * from DSL.Dcsvfacilities;
+create table dslhbase.hbcsvmembers AS select * from DSL.Dcsvmembers;
+create table dslhbase.hbpobookings AS select * from DSL.Dpobookings;
+create table dslhbase.hbpofacilities AS select * from DSL.Dpofacilities;
+create table dslhbase.hbpomembers AS select * from DSL.Dpomembers;
+create table dslhbase.hbmsbookings AS select * from DSL.Dmsbookings;
+create table dslhbase.hbmsfacilities AS select * from DSL.Dmsfacilities;
+create table dslhbase.hbmsmembers AS select * from DSL.Dmsmembers;
+create table dslhbase.hbmybookings AS select * from DSL.Dmybookings;
+create table dslhbase.hbmyfacilities AS select * from DSL.Dmyfacilities;
+create table dslhbase.hbmymembers AS select * from DSL.Dmymembers;
+
+******************Create the Integration tables and overwrite the tables with the internal tables with data************************
+create table hicsvbookhb(bookid int, facid int, memid int, starttime date, slots int) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:facid,b:memid,b:starttime,b:slots") tblproperties("hbase.table.name"="hbcsvbookhi");
+create table hicsvfacilityhb(facid int, name string, membercost float, guestcost float, initialoutlay float, monthlymaintenance float) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:name,b:membercost,b:guestcost,b:initialoutlay,b:monthlymaintenance") tblproperties("hbase.table.name"="hbcsvfacilityhi");
+create table hicsvmemberhb(memid int, surname string, firstname string, address string, zipcode int, telephone string, recommendedby int, joindate date) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:surname,b:firstname,b:address,b:zipcode,b:telephone,b:recommendedby,b:joindate") tblproperties("hbase.table.name"="hbcsvmemberhi");
+
+insert overwrite table hicsvbookhb select * from dslhbase.hbcsvbookings;
+insert overwrite table hicsvfacilityhb select * from dslhbase.hbcsvfacilities;
+insert overwrite table hicsvmemberhb select * from dslhbase.hbcsvmembers;
+**********************************************************************************************************
+create table himsbookhb(bookid int, facid int, memid int, starttime date, slots int) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:facid,b:memid,b:starttime,b:slots") tblproperties("hbase.table.name"="hbmsbookhi");
+create table himsfacilityhb(facid int, name string, membercost float, guestcost float, initialoutlay float, monthlymaintenance float) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:name,b:membercost,b:guestcost,b:initialoutlay,b:monthlymaintenance") tblproperties("hbase.table.name"="hbmsfacilityhi");
+create table himsmemberhb(memid int, surname string, firstname string, address string, zipcode int, telephone string, recommendedby int, joindate date) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:surname,b:firstname,b:address,b:zipcode,b:telephone,b:recommendedby,b:joindate") tblproperties("hbase.table.name"="hbmsmemberhi");
+
+insert overwrite table himsbookhb select * from dslhbase.hbmsbookings;
+insert overwrite table himsfacilityhb select * from dslhbase.hbmsfacilities;
+insert overwrite table himsmemberhb select * from dslhbase.hbmsmembers;
+********************************************************************************************************
+create table himybookhb(bookid int, facid int, memid int, starttime date, slots int) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:facid,b:memid,b:starttime,b:slots") tblproperties("hbase.table.name"="hbmybookhi");
+create table himyfacilityhb(facid int, name string, membercost float, guestcost float, initialoutlay float, monthlymaintenance float) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:name,b:membercost,b:guestcost,b:initialoutlay,b:monthlymaintenance") tblproperties("hbase.table.name"="hbmyfacilityhi");
+create table himymemberhb(memid int, surname string, firstname string, address string, zipcode int, telephone string, recommendedby int, joindate date) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:surname,b:firstname,b:address,b:zipcode,b:telephone,b:recommendedby,b:joindate") tblproperties("hbase.table.name"="hbmymemberhi");
+
+insert overwrite table himybookhb select * from dslhbase.hbmybookings;
+insert overwrite table himyfacilityhb select * from dslhbase.hbmyfacilities;
+insert overwrite table himymemberhb select * from dslhbase.hbmymembers;
+*********************************************************************************************************
+create table hipobookhb(bookid int, facid int, memid int, starttime date, slots int) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:facid,b:memid,b:starttime,b:slots") tblproperties("hbase.table.name"="hbpobookhi");
+create table hipofacilityhb(facid int, name string, membercost float, guestcost float, initialoutlay float, monthlymaintenance float) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:name,b:membercost,b:guestcost,b:initialoutlay,b:monthlymaintenance") tblproperties("hbase.table.name"="hbpofacilityhi");
+create table hipomemberhb(memid int, surname string, firstname string, address string, zipcode int, telephone string, recommendedby int, joindate date) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with serdeproperties("hbase.columns.mapping"=":key,b:surname,b:firstname,b:address,b:zipcode,b:telephone,b:recommendedby,b:joindate") tblproperties("hbase.table.name"="hbpomemberhi");
+
+insert overwrite table hipobookhb select * from dslhbase.hbpobookings;
+insert overwrite table hipofacilityhb select * from dslhbase.hbpofacilities;
+insert overwrite table hipomemberhb select * from dslhbase.hbpomembers;
